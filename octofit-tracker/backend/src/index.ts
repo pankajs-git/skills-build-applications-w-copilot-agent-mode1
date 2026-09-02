@@ -2,6 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import userRoutes from './routes/users'
+import workoutRoutes from './routes/workouts'
+import goalRoutes from './routes/goals'
 
 dotenv.config()
 
@@ -25,6 +28,17 @@ mongoose.connect(MONGODB_URI)
 // Routes
 app.get('/health', (req, res) => {
   res.json({ status: 'OctoFit Tracker API is running' })
+})
+
+// API Routes
+app.use('/api/users', userRoutes)
+app.use('/api/workouts', workoutRoutes)
+app.use('/api/goals', goalRoutes)
+
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error(err.stack)
+  res.status(500).json({ error: 'Internal server error' })
 })
 
 // Start Server
